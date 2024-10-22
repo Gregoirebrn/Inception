@@ -1,14 +1,36 @@
 version: "3.8"
 
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
 services:
   nginx:
     build: requirements/nginx/.
     container_name: nginx
+    volumes:
+      - wordpress:/var/www/wordpress
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+      - mariadb
+    env_file:
+      - .env
     ports:
-      - "80:80"
+      - "443:443"
+    restart: on-failure
+
   wordpress:
+    image: mysql:8.0
     build: requirements/wordpress/.
     container_name: wp_php
-    restart: always
+    networks:
+      - inception
+    depends_on:
+      - mariadb
     volumes:
-      -
+      - wordpress:/var/www/html
+    env_file: .env
+    restart: always
