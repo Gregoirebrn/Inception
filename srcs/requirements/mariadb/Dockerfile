@@ -10,7 +10,7 @@ RUN apt-get update \
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 RUN chmod +x /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY ./tools/script.sh /usr/local/bin/script.sh
-RUN chmod +x /usr/local/bin/mariadb.sh
+RUN chmod +x /usr/local/bin/script.sh
 
 ENTRYPOINT ["/usr/local/bin/mariadb.sh"]
 
