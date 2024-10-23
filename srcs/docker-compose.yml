@@ -6,7 +6,7 @@ services:
       context: requirements/nginx/
     container_name: nginx
     volumes:
-      - wordpress:/var/www/html
+      - v_wordpress:/var/www/html
     networks:
       - inception
     depends_on:
@@ -28,7 +28,7 @@ services:
     depends_on:
       - mariadb
     volumes:
-      - wordpress:/var/www/html
+      - v_wordpress:/var/www/html
     env_file: .env
     secrets:
       - db_secr
@@ -74,13 +74,13 @@ secrets:
     file: ../secrets/db_root_password.txt
 
 volumes:
-  wordpress:
+  v_wordpress:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /home/grebrune/data/wordpress
-  mariadb:
+  v_mariadb:
     driver: local
     driver_opts:
       type: none

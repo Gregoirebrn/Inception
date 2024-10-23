@@ -1,17 +1,14 @@
 
 FROM debian:bullseye
 
-RUN apt update -y && apt upgrade -y  \
-    && apt-get install -y mariadb-server mariadb-client \
+RUN apt-get update \
+    && apt-get install -y mariadb-server \
+    mariadb-client \
     && mkdir -p /var/run/mysql \
     && chown -R mysql:mysql /var/run/mysql
+
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-
-EXPOSE 3306
-
-HEALTHCHECK --start-period=5m \
-  CMD mariadb -e 'SELECT @@datadir;' || exit 1
-
+RUN chmod +x /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY ./tools/script.sh /usr/local/bin/script.sh
 RUN chmod +x /usr/local/bin/mariadb.sh
 
