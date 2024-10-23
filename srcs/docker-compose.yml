@@ -1,31 +1,28 @@
 version: "3.8"
 
-networks:
-  inception:
-    name: inception
-    driver: bridge
-
 services:
   nginx:
-    build: requirements/nginx/.
+    build:
+      context: requirements/nginx/
     container_name: nginx
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html
     networks:
       - inception
     depends_on:
       - wordpress
-      - mariadb
     env_file:
       - .env
     ports:
       - "443:443"
-    restart: on-failure
+    secrets:
+      - cr_secr
+    restart: unless-stopped
 
   wordpress:
-    image: mysql:8.0
-    build: requirements/wordpress/.
-    container_name: wp_php
+    build:
+      context: requirements/wordpress
+    container_name: wordpress
     networks:
       - inception
     depends_on:
@@ -33,4 +30,59 @@ services:
     volumes:
       - wordpress:/var/www/html
     env_file: .env
+    secrets:
+      - db_secr
     restart: always
+
+  mariadb:
+    build:
+      context: requirements/mariadb
+    container_name: mariadb
+    networks:
+      - inception
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - v_mariadb:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    secrets:
+      - db_root_secr
+    restart: unless-stopped
+
+  db:
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
+secrets:
+  cr_secr:
+    file: ../secrets/credentials.txt
+  db_secr:
+    file: ../secrets/db_password.txt
+  db_root_secr:
+    file: ../secrets/db_root_password.txt
+
+volumes:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/grebrune/data/wordpress
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/grebrune/data/mariadb
