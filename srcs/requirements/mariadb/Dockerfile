@@ -1,5 +1,5 @@
 
-FROM debian:bullseye
+FROM debian:buster
 
 RUN apt-get update \
     && apt-get install -y mariadb-server \
@@ -7,11 +7,15 @@ RUN apt-get update \
     && mkdir -p /var/run/mysql \
     && chown -R mysql:mysql /var/run/mysql
 
-COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 RUN chmod +x /etc/mysql/mariadb.conf.d/50-server.cnf
-COPY ./tools/script.sh /usr/local/bin/script.sh
-RUN chmod +x /usr/local/bin/script.sh
+
+COPY ./tools/mariadb.sh /usr/local/bin/mariadb.sh
+
+RUN chmod +x /usr/local/bin/mariadb.sh
+
+EXPOSE 3306
 
 ENTRYPOINT ["/usr/local/bin/mariadb.sh"]
 
-CMD ["mysqld", "--blid-address=0.0.0.0"]
+CMD ["mysqld", "--bind-address=0.0.0.0"]

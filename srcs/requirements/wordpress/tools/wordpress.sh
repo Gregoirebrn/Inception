@@ -1,8 +1,11 @@
-sleep 3
+#!/bin/sh
+
+if [ ! -f ./wp-config.php ]; then
+  wp core download --locale=en_GB --allow-root
 
   wp config create \
     --dbname=$SQL_DATABASE \
-    --dbuser=$MYSQL_USER \
+    --dbuser=$SQL_USER \
     --dbpass=$SQL_PASSWORD \
     --dbhost=mariadb \
     --path=/var/www/html/ \
@@ -24,9 +27,6 @@ sleep 3
     --path=/var/www/html/ \
     --allow-root
 
-listen=wordpress:9000
+fi
 
-
-/usr/sbin/php-fpm${PHP_VERSION} -F
-
-echo "WordPress installation completed and users created."
+exec "$@"
