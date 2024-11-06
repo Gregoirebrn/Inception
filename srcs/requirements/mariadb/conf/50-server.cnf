@@ -1,7 +1,24 @@
 [mysqld]
-user = mysql
-port = 3306
-datadir = /var/lib/mysql
-socket = /var/run/mysqld/mysqld.sock
-skip-networking = false
-bind-address = 0.0.0.0
+[www]
+
+# settings
+user = www-data
+group = www-data
+
+listen = 9000
+
+#sockets
+listen.owner = www-data
+listen.group = www-data
+
+# pm = dynamic: This line sets the process manager to 'dynamic', meaning PHP-FPM will fork child processes based on demand, up to pm.max_children.
+pm = dynamic
+
+pm.max_children = 25
+
+#  This line sets the number of child processes to create on startup.
+pm.start_servers = 5
+
+pm.min_spare_servers = 1
+
+pm.max_spare_servers = 10

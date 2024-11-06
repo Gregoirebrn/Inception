@@ -1,16 +1,37 @@
 
-all: debug
+all: up
 
-up		:
-			@mkdir data && mkdir data/wordpress
-			@docker compose -f ./src/docker-compose up -d --build
+up:
+	docker-compose -f srcs/docker-compose.yml up --build
 
-clean	:
-			$(RM) -r $(OBJS) $(OBJS_D)
+build:
+	docker-compose -f srcs/docker-compose.yml build
 
-fclean	:	clean
-			$(RM) $(BIN)
+logs:
+	docker-compose -f srcs/docker-compose.yml logs -f
 
-re		:	fclean all
+prune:
+	docker system prune -f
 
-.PHONY: all up down start stop ps re clean
+down:
+	docker-compose -f srcs/docker-compose.yml down
+
+restart: down up
+
+clean:
+	docker-compose -f srcs/docker-compose.yml down -v
+
+help:
+	@echo "Makefile for Docker Compose"
+	@echo "Available targets:"
+	@echo "  up      - Start services"
+	@echo "  down    - Stop services"
+	@echo "  build   - Build services"
+	@echo "  logs    - View logs"
+	@echo "  exec    - Execute command in service"
+	@echo "  prune   - Remove unused containers and images"
+	@echo "  restart  - Restart services"
+	@echo "  clean   - Remove volumes and stop services"
+	@echo "  help    - Show this help message"
+
+.PHONY: all up down build logs exec prune restart clean help

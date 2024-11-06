@@ -1,16 +1,26 @@
-#!/bin/sh
+#!/bin/bash
 
-sleep 4
-service mysql start
+mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm > /dev/null
 
-mysql -uroot -e "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$SQL_ROOT_PASSWORD'; \
-  FLUSH PRIVILEGES;"
-mysql -uroot -e "CREATE DATABASE IF NOT EXISTS $SQL_DATABASE;"
-mysql -root -e "CREATE USER '$SQL_USER'@'%' IDENTIFIED BY '$SQL_PASSWORD';"
-sleep 1
-mysql -uroot -e "GRANT ALL PRIVILEGES ON $SQL_DATABASE.* TO '$SQL_USER'@'%' IDENTIFIED BY '$SQL_PASSWORD'; \
-  FLUSH PRIVILEGES;"
 
-service mysql stop
+if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || [ -z "$SQL_PASSWORD" ] || [ -z "$SQL_ROOT_PASSWORD" ]; then
+  echo "One or more required environment variables are not set."
+  echo "Please set SQL_DATABASE, SQL_USER, SQL_PASSWORD, and SQL_ROOT_PASSWORD."
+  exit 1
+fi
 
-exec "$@"
+mysqld_safe --skip-networking &
+
+until mysqladmin ping &>/dev/null; do
+  echo -n "."; sleep 1
+done
+
+mysql -u root  -e "CREATE DATABASE IF NOT EXISTS ${SQL_DATABASE};"
+mysql -u root  -e "CREATE USER IF NOT EXISTS '${SQL_USER}'@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
+mysql -u root  -e "GRANT ALL PRIVILEGES ON ${SQL_DATABASE}.* TO '${SQL_USER}'@'%';"
+mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';"
+mysql -u root -e "FLUSH PRIVILEGES;"
+
+mysqladmin -u root -p${SQL_ROOT_PASSWORD} shutdown
+
+exec mysqld_safe

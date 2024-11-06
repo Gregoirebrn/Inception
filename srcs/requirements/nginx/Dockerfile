@@ -1,5 +1,5 @@
 
-FROM debian:bullseye
+FROM debian:buster
 
 RUN apt update \
     && apt install -y nginx openssl \
@@ -12,6 +12,11 @@ RUN apt update \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /var/run/nginx
 
+
 COPY conf/nginx.conf etc/nginx/nginx.conf
 
-CMD [ "nginx", "-g", "daemon off;" ]
+ENTRYPOINT ["nginx"]
+
+CMD ["-g", "daemon off;" ]
+
+EXPOSE 443
