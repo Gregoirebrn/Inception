@@ -13,7 +13,8 @@ services:
     env_file:
       - .env
     ports:
-      - "443:443"
+      - "4443:4443"
+#      - "443:443"
 #    secrets:
 #      - cr_secr
     restart: unless-stopped
@@ -76,10 +77,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/goyo/Documents/work/Inception/data/wordpress
+      device: /home/grebrune/Documents/github/5_Circle/Inception/data/wordpress
   mariadb:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/goyo/Documents/work/Inception/data/mariadb
+      device: /home/grebrune/Documents/github/5_Circle/Inception/data/mariadb
