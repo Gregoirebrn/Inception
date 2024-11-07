@@ -1,3 +1,4 @@
+
 FROM debian:11
 
 RUN apt-get update
@@ -8,9 +9,6 @@ RUN apt-get install -y --no-install-recommends\
     php-fpm\
     php-mysql\
     php-cli
-
-# : Vous changez la propriété de tous les fichiers et répertoires sous /var/www/
-#pour qu'ils appartiennent à l'utilisateur www-data et au groupe www-data.
 RUN mkdir -p /run/php/
 RUN chown -R www-data:www-data /run/php/
 
@@ -21,5 +19,6 @@ RUN chmod +x wordpress.sh
 EXPOSE 9000
 
 ENTRYPOINT ["./wordpress.sh"]
+
 CMD ["php-fpm7.4", "-F"]
 
