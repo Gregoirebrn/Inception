@@ -65,13 +65,13 @@ networks:
 
 secrets:
   db_password:
-    file: db_password
+    file: secrets/db_password
   db_root_password:
-    file: db_root_password
+    file: secrets/db_root_password
   wp_password:
-    file: wp_password
+    file: secrets/wp_password
   wp_admin_password:
-    file: wp_admin_password
+    file: secrets/wp_admin_password
 
 volumes:
   wordpress:

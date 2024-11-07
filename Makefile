@@ -27,14 +27,14 @@ fclean: clean
 	docker system prune -af
 	docker-compose -f srcs/docker-compose.yml down -v --rmi all
 
-restart: fclean up
+re: fclean up
 
 secrets:
 	mkdir -p srcs/$@
-	openssl rand -hex -out $@/db_root_password 16
-	openssl rand -hex -out $@/db_password 16
-	openssl rand -hex -out $@/wp_admin_password 16
-	openssl rand -hex -out $@/wp_password 16
+	openssl rand -hex -out srcs/$@/db_root_password 16
+	openssl rand -hex -out srcs/$@/db_password 16
+	openssl rand -hex -out srcs/$@/wp_admin_password 16
+	openssl rand -hex -out srcs/$@/wp_password 16
 
 help:
 	@echo "Makefile for Docker Compose"
