@@ -12,10 +12,18 @@ else
     ./wp-cli.phar config create --allow-root --dbname="$SQL_DATABASE" --dbuser="$SQL_USER" --dbpass="'$SQL_PASSWORD'" \
                  --dbhost=mariadb
     ./wp-cli.phar core install --allow-root --url="https://$WP_URL" --title="$WP_TITLE" --admin_user="'$WP_ADMIN_USER'" \
-                --admin_password="'$WP_ADMIN_PASS'" --admin_email="$WP_ADMIN_EMAIL"
-    ./wp-cli.phar user create --allow-root "$WP_USER" "$WP_EMAIL" --user_pass="'$WP_PASS'" --path="$WP_PATH" --allow-root
+                --admin_password="`$WP_ADMIN_PASS`" --admin_email="$WP_ADMIN_EMAIL"
+    ./wp-cli.phar user create --allow-root "$WP_USER" "$WP_EMAIL" --user_pass="`$WP_PASS`" --path="$WP_PATH" --allow-root
 
     chown -R www-data:www-data /var/www/html/wp-content/
 fi
+  echo $WP_ADMIN_PASS
+  echo ============1
+  echo '$WP_ADMIN_PASS'
+  echo ============2
+  echo "`$WP_ADMIN_PASS`"
+  echo ============3
+  echo `$WP_ADMIN_PASS`
+  echo ============4
 
 exec "$@"
