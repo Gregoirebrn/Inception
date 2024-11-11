@@ -32,6 +32,8 @@ services:
     secrets:
       - wp_password
       - wp_admin_password
+      - db_password
+      - db_root_password
     restart: always
 
   mariadb:
@@ -43,6 +45,8 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     secrets:
+      - wp_password
+      - wp_admin_password
       - db_password
       - db_root_password
     env_file:
