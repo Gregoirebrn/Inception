@@ -2,9 +2,9 @@
 all: up
 
 up: secrets
-	mkdir -p ~/data
-	mkdir -p ~/data/wordpress
-	mkdir -p ~/data/mariadb
+	@mkdir -p ~/data
+	@mkdir -p ~/data/wordpress
+	@mkdir -p ~/data/mariadb
 	docker-compose -f srcs/docker-compose.yml up --build
 
 build:
@@ -22,7 +22,7 @@ down:
 clean:
 	docker-compose -f srcs/docker-compose.yml down -v
 
-fclean: clean
+fclean: clean del
 	docker run -it --rm -v $(HOME)/data:/data busybox sh -c "rm -rf data/*"
 	docker system prune -af
 	docker-compose -f srcs/docker-compose.yml down -v --rmi all
@@ -30,11 +30,15 @@ fclean: clean
 re: fclean up
 
 secrets:
-	mkdir -p $@
-	openssl rand -hex -out $@/db_root_password 16
-	openssl rand -hex -out $@/db_password 16
-	openssl rand -hex -out $@/wp_admin_password 16
-	openssl rand -hex -out $@/wp_password 16
+	@mkdir -p $@
+	@openssl rand -hex -out $@/db_root_password 16
+	@openssl rand -hex -out $@/db_password 16
+	@openssl rand -hex -out $@/wp_admin_password 16
+	@openssl rand -hex -out $@/wp_password 16
+	@openssl req -x509 -newkey rsa:2048 -keyout $@/ssl_certificate_key -out $@/ssl_certificate -days 365 -nodes -subj "/CN=grebrune.42.fr"
+
+del:
+	@rm -rf secrets/
 
 help:
 	@echo "Makefile for Docker Compose"

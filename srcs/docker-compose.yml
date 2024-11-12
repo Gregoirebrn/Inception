@@ -15,6 +15,9 @@ services:
     ports:
       - "4443:4443"
 #      - "443:443"
+    secrets:
+      - nx_ssl_cer
+      - nx_ssl_key
     restart: unless-stopped
 
   wordpress:
@@ -53,15 +56,6 @@ services:
       - .env
     restart: always
 
-#  db:
-#    image: postgres
-#    healthcheck:
-#      test: ["CMD", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-#      interval: 10s
-#      retries: 5
-#      start_period: 30s
-#      timeout: 10s
-
 networks:
   inception:
     name: inception
@@ -76,6 +70,10 @@ secrets:
     file: ../secrets/wp_password
   wp_admin_password:
     file: ../secrets/wp_admin_password
+  nx_ssl_cer:
+    file: ../secrets/ssl_certificate
+  nx_ssl_key:
+    file: ../secrets/ssl_certificate_key
 
 volumes:
   wordpress:

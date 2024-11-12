@@ -17,6 +17,5 @@ else
 
     chown -R www-data:www-data /var/www/html/wp-content/
 fi
-  echo "end"
 
 exec "$@"
