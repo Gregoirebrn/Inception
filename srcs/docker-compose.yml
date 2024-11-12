@@ -13,8 +13,8 @@ services:
     env_file:
       - .env
     ports:
-      - "4443:4443"
-#      - "443:443"
+#      - "4443:4443"
+      - "443:443"
     secrets:
       - nx_ssl_cer
       - nx_ssl_key
@@ -81,10 +81,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/grebrune/data/wordpress
+      device: $_HOME/data/wordpress
   mariadb:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/grebrune/data/mariadb
+      device: $_HOME/data/mariadb
