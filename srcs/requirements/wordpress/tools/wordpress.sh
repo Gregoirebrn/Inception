@@ -1,5 +1,4 @@
 #!/bin/bash
-sleep 2
 cd /var/www/html
 
 if [ -f "/var/www/html/wp-config.php" ]; then

@@ -71,9 +71,9 @@ secrets:
   wp_admin_password:
     file: ../secrets/wp_admin_password
   nx_ssl_cer:
-    file: ../secrets/ssl_certificate
+    file: ../certs/ssl_certificate
   nx_ssl_key:
-    file: ../secrets/ssl_certificate_key
+    file: ../certs/ssl_certificate_key
 
 volumes:
   wordpress:

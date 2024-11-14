@@ -1,56 +1,75 @@
+override SECRETS_DIR := secrets
+override CERTIFICATES_DIR := certs
+
+override SECRETS_FILES := $(addprefix $(SECRETS_DIR)/, \
+							db_root_password \
+							db_password \
+							wp_admin_password \
+							wp_password \
+							)
+override CERTIFICATE_FILE := $(CERTIFICATES_DIR)/ssl_certificate
 
 all: up
 
-up: secrets
+up: $(SECRETS_FILES) $(CERTIFICATE_FILE)
 	@mkdir -p ~/data
 	@mkdir -p ~/data/wordpress
 	@mkdir -p ~/data/mariadb
-	docker-compose -f srcs/docker-compose.yml up --build
+	docker-compose -f srcs/docker-compose.yml up --build --detach
 
-build:
-	docker-compose -f srcs/docker-compose.yml build
-
-logs:
-	docker-compose -f srcs/docker-compose.yml logs -f
-
-prune:
-	docker system prune -f
+build: $(SECRETS_FILES) $(CERTIFICATE_FILE)
+	docker-compose -f srcs/docker-compose.yml build --no-cache
 
 down:
 	docker-compose -f srcs/docker-compose.yml down
 
-clean:
-	docker-compose -f srcs/docker-compose.yml down -v
+start:
+	docker-compose -f srcs/docker-compose.yml start
 
-fclean: clean del
-	docker run -it --rm -v $(HOME)/data:/data busybox sh -c "rm -rf data/*"
-	docker system prune -af
-	docker-compose -f srcs/docker-compose.yml down -v --rmi all
+stop:
+	docker-compose -f srcs/docker-compose.yml stop
+
+logs:
+	docker-compose -f srcs/docker-compose.yml logs --follow
+
+prune:
+	docker system prune --all --volumes --force
+
+mysql:
+	docker-compose -f srcs/docker-compose.yml exec mariadb mysql
+
+clean:
+	docker-compose -f srcs/docker-compose.yml down --volumes --rmi all
+
+fclean: clean
+#	Use docker run to remove data because of permissions
+	docker run -it --rm -v $(HOME)/data:/data busybox sh -c "rm -rf /data/*"
+	rm -rf $(SECRETS_DIR) $(CERTIFICATES_DIR)
 
 re: fclean up
 
-secrets:
-	@mkdir -p $@
-	@openssl rand -hex -out $@/db_root_password 16
-	@openssl rand -hex -out $@/db_password 16
-	@openssl rand -hex -out $@/wp_admin_password 16
-	@openssl rand -hex -out $@/wp_password 16
-	@openssl req -x509 -newkey rsa:2048 -keyout $@/ssl_certificate_key -out $@/ssl_certificate -days 365 -nodes -subj "/CN=grebrune.42.fr"
+$(SECRETS_FILES):
+	@mkdir -p $(dir $@)
+	openssl rand -hex -out $@ 16
 
-del:
-	@rm -rf secrets/
+$(CERTIFICATE_FILE):
+	@mkdir -p $(dir $@)
+	openssl req -x509 -newkey rsa:2048 -keyout $@_key -out $@ -days 365 -nodes -subj "/CN=grebrune.42.fr" 2> /dev/null
 
 help:
 	@echo "Makefile for Docker Compose"
 	@echo "Available targets:"
 	@echo "  up      - Start services"
-	@echo "  down    - Stop services"
 	@echo "  build   - Build services"
+	@echo "  down    - Remove services"
+	@echo "  start   - Start services"
+	@echo "  stop    - Stop services"
 	@echo "  logs    - View logs"
-	@echo "  exec    - Execute command in service"
-	@echo "  prune   - Remove unused containers and images"
-	@echo "  restart  - Restart services"
+	@echo "  prune   - Remove all unused containers and images"
+	@echo "  mysql   - Execute mariadb monitor"
+	@echo "  re      - Restart services with fclean & up"
+	@echo "  fclean  - Call clean and remove data, secrets & certificates"
 	@echo "  clean   - Remove volumes and stop services"
 	@echo "  help    - Show this help message"
 
-.PHONY: all up down build logs exec prune restart clean help
+.PHONY: all up build down start stop logs prune mysql re fclean clean
