@@ -5,7 +5,7 @@ up: secrets
 	@mkdir -p ~/data
 	@mkdir -p ~/data/wordpress
 	@mkdir -p ~/data/mariadb
-	docker-compose -f srcs/docker-compose.yml up --build
+	docker-compose -f srcs/docker-compose.yml up --build --detach
 
 build:
 	docker-compose -f srcs/docker-compose.yml build --no-cache
@@ -34,7 +34,7 @@ clean:
 fclean: clean
 #	Use docker run to remove data because of permissions
 	docker run -it --rm -v $(HOME)/data:/data busybox sh -c "rm -rf /data/*"
-	#rm -rf ./secrets/
+	rm -rf ./secrets/
 
 re: fclean up
 

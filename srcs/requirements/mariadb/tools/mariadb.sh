@@ -17,7 +17,7 @@ if [ ! -d "/var/lib/mysql" ]; then
   mysql_install_db
 fi
 
-/etc/init.d/ mariadb start
+service mariadb start
 
 mariadb << xX_END_Xx
 CREATE DATABASE IF NOT EXISTS $SQL_DATABASE;
@@ -27,6 +27,6 @@ SET PASSWORD FOR 'root'@'localhost' = PASSWORD("$($SQL_ROOT_PASSWORD)");
 FLUSH PRIVILEGES;
 xX_END_Xx
 
-/etc/init.d/ mariadb stop
+service mariadb stop
 fi
 exec "$@"
