@@ -13,8 +13,8 @@ services:
     env_file:
       - .env
     ports:
-      - "4443:4443"
-#      - "443:443"
+#      - "4443:4443"
+      - "443:443"
     secrets:
       - nx_ssl_cer
       - nx_ssl_key
@@ -71,9 +71,9 @@ secrets:
   wp_admin_password:
     file: ../secrets/wp_admin_password
   nx_ssl_cer:
-    file: ../certs/ssl_certificate
+    file: ../secrets/ssl_certificate
   nx_ssl_key:
-    file: ../certs/ssl_certificate_key
+    file: ../secrets/ssl_certificate_key
 
 volumes:
   wordpress:

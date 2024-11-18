@@ -1,23 +1,13 @@
-override SECRETS_DIR := secrets
-override CERTIFICATES_DIR := certs
-
-override SECRETS_FILES := $(addprefix $(SECRETS_DIR)/, \
-							db_root_password \
-							db_password \
-							wp_admin_password \
-							wp_password \
-							)
-override CERTIFICATE_FILE := $(CERTIFICATES_DIR)/ssl_certificate
 
 all: up
 
-up: $(SECRETS_FILES) $(CERTIFICATE_FILE)
+up: secrets
 	@mkdir -p ~/data
 	@mkdir -p ~/data/wordpress
 	@mkdir -p ~/data/mariadb
-	docker-compose -f srcs/docker-compose.yml up --build --detach
+	docker-compose -f srcs/docker-compose.yml up --build
 
-build: $(SECRETS_FILES) $(CERTIFICATE_FILE)
+build:
 	docker-compose -f srcs/docker-compose.yml build --no-cache
 
 down:
@@ -44,17 +34,17 @@ clean:
 fclean: clean
 #	Use docker run to remove data because of permissions
 	docker run -it --rm -v $(HOME)/data:/data busybox sh -c "rm -rf /data/*"
-	rm -rf $(SECRETS_DIR) $(CERTIFICATES_DIR)
+	#rm -rf ./secrets/
 
 re: fclean up
 
-$(SECRETS_FILES):
-	@mkdir -p $(dir $@)
-	openssl rand -hex -out $@ 16
-
-$(CERTIFICATE_FILE):
-	@mkdir -p $(dir $@)
-	openssl req -x509 -newkey rsa:2048 -keyout $@_key -out $@ -days 365 -nodes -subj "/CN=grebrune.42.fr" 2> /dev/null
+secrets:
+	@mkdir -p $@
+	openssl rand -hex -out $@/db_root_password 16
+	openssl rand -hex -out $@/db_password 16
+	openssl rand -hex -out $@/wp_admin_password 16
+	openssl rand -hex -out $@/wp_password 16
+	openssl req -x509 -newkey rsa:2048 -keyout $@/ssl_certificate_key -out $@/ssl_certificate -days 365 -nodes -subj "/CN=grebrune.42.fr" 2> /dev/null
 
 help:
 	@echo "Makefile for Docker Compose"

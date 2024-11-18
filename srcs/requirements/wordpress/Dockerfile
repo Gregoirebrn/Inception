@@ -16,6 +16,8 @@ COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY ./tools/wordpress.sh .
 RUN chmod +x wordpress.sh
 
+EXPOSE 9000
+
 ENTRYPOINT ["./wordpress.sh"]
 
 CMD ["php-fpm7.4", "-F"]
