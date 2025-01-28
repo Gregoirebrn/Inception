@@ -1,7 +1,3 @@
-Génial, merci pour les détails ! Voici un modèle de README adapté à ton projet Inception avec Docker, Docker Compose, Nginx, MariaDB et WordPress. Tu pourras personnaliser ce modèle en fonction de ta propre mise en place.
-
----
-
 # Projet Inception - 42
 
 Ce projet a pour objectif de mettre en place un environnement de développement web complet en utilisant Docker et Docker Compose. L'objectif final est de faire fonctionner un site WordPress avec une persistance des données et un serveur web performant, tout en utilisant Nginx comme reverse proxy, MariaDB pour la gestion de la base de données, et WordPress pour le système de gestion de contenu.
@@ -179,7 +175,3 @@ Cela arrêtera et supprimera tous les conteneurs sans supprimer les volumes.
 ## Contribuer
 
 Si vous souhaitez contribuer à ce projet, vous pouvez forker le repository, apporter vos modifications, puis soumettre une pull request.
-
----
-
-Voilà un modèle de README pour ton projet *Inception* ! N’hésite pas à l’adapter selon ta configuration exacte et à ajouter des informations supplémentaires si nécessaire. Si tu veux que je modifie quelque chose ou si tu as des questions, fais-le moi savoir !
