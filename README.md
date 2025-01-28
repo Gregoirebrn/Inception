@@ -24,13 +24,33 @@ Ces services sont définis dans un fichier `docker-compose.yml` et sont configur
 Le projet se compose des éléments suivants :
 
 ```
-.
-├── nginx/
-│   └── default.conf        # Configuration du serveur Nginx
+inception/
+├── srcs/
+│   ├── requirements/
+│   │   ├── wordpress/
+│   │   │   ├── Dockerfile
+│   │   │   ├── conf/
+│   │   │   │   └── www.conf
+│   │   │   └── tools/
+│   │   │       └── wordpress.sh
+│   │   ├── mariadb/
+│   │   │   ├── Dockerfile
+│   │   │   ├── my.cnf
+│   │   │   └── tools/
+│   │   │       └── mariadb.sh
+│   │   └── nginx/
+│   │       ├── Dockerfile
+│   │       └── conf/
+│   │           └── nginx.conf
+│   ├── .env
+│   └── docker-compose.yml
+│
+├── Makefile
+└── README.md
+
+data/
 ├── wordpress/
-│   └── Dockerfile          # Dockerfile pour construire l'image WordPress
-├── docker-compose.yml      # Configuration Docker Compose pour tous les services
-└── README.md               # Ce fichier
+└── mariadb/
 ```
 
 ## Installation
