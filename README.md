@@ -50,10 +50,10 @@ Le projet se compose des éléments suivants :
 
 3. **Lancer les services avec Docker Compose** :
 
-   Une fois que vous avez vérifié la configuration, vous pouvez démarrer les services en utilisant la commande suivante :
+   Une fois que tout est installé, vous pouvez démarrer les services en utilisant la commande suivante :
 
    ```bash
-   docker-compose up -d
+   make
    ```
 
    Cette commande télécharge les images nécessaires et lance les conteneurs en arrière-plan.
