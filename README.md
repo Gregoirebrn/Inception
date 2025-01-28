@@ -63,10 +63,9 @@ Le projet se compose des éléments suivants :
    Une fois les services lancés, vous pouvez accéder à votre site WordPress à l'adresse suivante dans votre navigateur :
 
    ```
-   http://localhost
+   http://grebrune.42.fr
    ```
 
-   Vous pourrez alors configurer WordPress et commencer à créer du contenu.
 
 ## Structure du fichier `docker-compose.yml`
 
@@ -127,7 +126,7 @@ volumes:
 
 ## Configuration Nginx
 
-Le fichier `nginx/default.conf` contient la configuration pour que Nginx redirige les requêtes HTTP vers le service WordPress. Vous pouvez personnaliser cette configuration selon vos besoins. Par exemple, voici une configuration simple :
+Le fichier `nginx/conf/nginx.conf` contient la configuration pour que Nginx redirige les requêtes HTTP vers le service WordPress. Vous pouvez personnaliser cette configuration selon vos besoins. Par exemple, voici une configuration simple :
 
 ```nginx
 server {
@@ -153,7 +152,7 @@ Les données de MariaDB sont persistées à l'aide d'un volume Docker `mariadb_d
 Pour arrêter tous les services, exécutez :
 
 ```bash
-docker-compose down
+make down
 ```
 
 Cela arrêtera et supprimera tous les conteneurs sans supprimer les volumes.
@@ -163,13 +162,13 @@ Cela arrêtera et supprimera tous les conteneurs sans supprimer les volumes.
 - Si vous rencontrez des problèmes pour accéder à votre site, vérifiez les logs des conteneurs avec la commande :
 
   ```bash
-  docker-compose logs
+  make logs
   ```
 
 - Si les services ne démarrent pas correctement, essayez de reconstruire les images et de redémarrer les conteneurs :
 
   ```bash
-  docker-compose up --build
+  make build
   ```
 
 ## Contribuer
